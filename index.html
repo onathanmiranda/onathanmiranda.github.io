@@ -7,18 +7,33 @@
   <title>Dots | Nathan Miranda</title>
   <script>
     window.addEventListener('DOMContentLoaded', function(){
-      const width = window.innerWidth / 20
-      const height = window.innerHeight / 20
+      const width = window.innerWidth / 40
+      const height = window.innerHeight / 40
       const dots = height * width 
+
+      const click = [ 
+        new Audio('/click.mp3'), 
+        new Audio('/click.mp3'), 
+        new Audio('/click.mp3'),
+        new Audio('/click.mp3'),
+        new Audio('/click.mp3'),
+      ];
 
       for(let i = 0; i<dots; i++){
         const div = document.createElement('div')
         const animate = () => {
           div.classList.add('animate')
-          window.setTimeout(() => div.classList.remove('animate'), 1000)
+          div.style.backgroundColor = `#${Math.floor(Math.random()*16777215).toString(16)}`;
+          window.setTimeout(() => {
+            div.classList.remove('animate')
+            div.style.backgroundColor = null
+          }, 1000)
+          
+          click[i % 5].volume = .5
+          click[i % 5].play()
+          console.log(i % 5)
         }
         div.onmouseenter = animate
-        div.ontouchmove = animate
         document.body.appendChild(div)
       }
     })
@@ -26,13 +41,13 @@
   <style>
     @keyframes rotate {
       0% {
-        transform: scale(1) rotate(0deg);
+        transform: scaleX(100%) 
       }
       50% {
-        transform: scale(5) rotate(359deg);
+        transform: scaleX(60%) 
       }
       100% {
-        transform: scale(1) rotate(0deg);
+        transform: scaleX(100%) 
       }
     }
     body {
@@ -42,16 +57,15 @@
       justify-content: space-between;
       align-content: space-between;
       width: 100vw;
-      gap: 5px;
       height: 100vh;
     }
     div {
-      flex: 0 0 15px;
-      width: 15px;
-      height: 15px;
-      background: green;
+      flex: 0 0 35px;
+      width: 40px;
+      height: 40px;
+      background: red;
+      transition: background-color 1s;
       transform: scale(1) rotate(0deg);
-      border-radius: 50%;
     }
     .animate {
       box-shadow: 0 0 3px 0px rgba(0,0,0,.5);
