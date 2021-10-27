@@ -4,14 +4,14 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dots | Nathan Miranda</title>
+  <title>Squares | Nathan Miranda</title>
   <script>
     window.addEventListener('DOMContentLoaded', generate)
 
     function generate(){
 
-      const horizontalBlocks = 21
-      const verticalBlocks = 21
+      const horizontalBlocks = 34
+      const verticalBlocks = 55
 
       const dots = horizontalBlocks * verticalBlocks
 
@@ -23,37 +23,36 @@
       document.body.style.gridTemplateRows = gridTemplateRows
       document.body.style.gap = '1px'
 
-      const click = [ 
-        new Audio('/click.mp3'), 
-        new Audio('/click.mp3'), 
-        new Audio('/click.mp3'),
-        new Audio('/click.mp3'),
-        new Audio('/click.mp3'),
-      ];
-
       const animate = (event, div, i) => {
+        const click = new Audio('/click.mp3');
+        click.volume = .5
+        click.play()
+        click.onended = () => click.remove();
 
+        const upAndDownPositionLoopReference = new Array(horizontalBlocks + 1).fill(div);
+  
         const next = div.nextElementSibling;
         const previous = div.previousElementSibling;
+        const up = upAndDownPositionLoopReference.reduce(acc => acc?.nextElementSibling);
+        const down = upAndDownPositionLoopReference.reduce(acc => acc?.previousElementSibling);
 
         div.classList.add('animate')
-
-        window.setTimeout(() => {
-          next.classList.add('animate')
-          previous.classList.add('animate')
-        }, 100)
-
+        
         window.setTimeout(() => {
           div.classList.remove('animate')
         }, 5000 * .89)
-        
-        window.setTimeout(() => {
-          previous.classList.remove('animate')
-          next.classList.remove('animate')
-        }, 5000 * .89 + 100)
-        
-        click[i % 5].volume = .5
-        click[i % 5].play()
+
+        const surrounding = [ next, previous, down, up ];
+
+        surrounding.forEach((element) => {
+          window.setTimeout(() => {
+            element?.classList.add('animate')
+          }, 25)
+
+          window.setTimeout(() => {
+            element?.classList.remove('animate')
+          }, 5000 * .89 + 100)
+        })
       }
 
       for(let i = 0; i<dots; i++){
